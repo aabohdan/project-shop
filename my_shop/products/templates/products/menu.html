@@ -1,0 +1,25 @@
+<div class="menu">
+    <style>
+        .btn-click-animation:active {
+            transform: scale(0.95);
+        }
+        .btn-hover-animation {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-hover-animation:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    <span class="logo">BEMOLKA</span>
+    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Главная страница</button>
+    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Каталог</button>
+    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Контакты</button>
+    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Корзина</button>
+{% if is_auth %}
+    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Профиль</button>
+{% else %}
+    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Выйти</button>
+{% endif %}
+
+</div>

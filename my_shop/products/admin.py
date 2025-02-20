@@ -24,4 +24,4 @@ class ProductAdmin(admin.ModelAdmin):
 class ReviewAdmin(admin.ModelAdmin):
     list_display = ('author_name', 'product', 'rating', 'created_at')
     list_filter = ('rating', 'product')
-    search_fields = ('author_name', 'product__name')
+    search_fields = ('author_name', 'product__name')    

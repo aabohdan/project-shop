@@ -1,0 +1,148 @@
+diff --git a/my_shop/my_shop/__pycache__/settings.cpython-313.pyc b/my_shop/my_shop/__pycache__/settings.cpython-313.pyc
+index e676997..90146ac 100644
+Binary files a/my_shop/my_shop/__pycache__/settings.cpython-313.pyc and b/my_shop/my_shop/__pycache__/settings.cpython-313.pyc differ
+diff --git a/my_shop/my_shop/__pycache__/urls.cpython-313.pyc b/my_shop/my_shop/__pycache__/urls.cpython-313.pyc
+index 78fefbc..a4f77ea 100644
+Binary files a/my_shop/my_shop/__pycache__/urls.cpython-313.pyc and b/my_shop/my_shop/__pycache__/urls.cpython-313.pyc differ
+diff --git a/my_shop/my_shop/settings.py b/my_shop/my_shop/settings.py
+index 20605b2..e9be9bd 100644
+--- a/my_shop/my_shop/settings.py
++++ b/my_shop/my_shop/settings.py
+@@ -10,6 +10,7 @@ For the full list of settings and their values, see
+ https://docs.djangoproject.com/en/5.1/ref/settings/
+ """
+ 
++import os
+ from pathlib import Path
+ 
+ # Build paths inside the project like this: BASE_DIR / 'subdir'.
+@@ -37,6 +38,7 @@ INSTALLED_APPS = [
+     'django.contrib.sessions',
+     'django.contrib.messages',
+     'django.contrib.staticfiles',
++    'bootstrap5',
+     'products',
+ ]
+ 
+@@ -49,6 +51,7 @@ MIDDLEWARE = [
+     'django.contrib.auth.middleware.AuthenticationMiddleware',
+     'django.contrib.messages.middleware.MessageMiddleware',
+     'django.middleware.clickjacking.XFrameOptionsMiddleware',
++    
+ ]
+ 
+ ROOT_URLCONF = 'my_shop.urls'
+@@ -117,7 +120,9 @@ USE_TZ = True
+ # Static files (CSS, JavaScript, Images)
+ # https://docs.djangoproject.com/en/5.1/howto/static-files/
+ 
+-STATIC_URL = 'static/'
++STATIC_URL = "static/"
++
++STATICFILES_DIRS = [BASE_DIR / "static"]
+ 
+ # Default primary key field type
+ # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+diff --git a/my_shop/my_shop/urls.py b/my_shop/my_shop/urls.py
+index dd9fe52..40744cd 100644
+--- a/my_shop/my_shop/urls.py
++++ b/my_shop/my_shop/urls.py
+@@ -17,7 +17,10 @@ Including another URLconf
+ from django.contrib import admin
+ from django.urls import path, include
+ 
++from django.conf import settings
++from django.conf.urls.static import static
++
+ urlpatterns = [
+     path('admin/', admin.site.urls),
+     path('', include('products.urls')),
+-]
+\ No newline at end of file
++]
+diff --git a/my_shop/products/__pycache__/urls.cpython-313.pyc b/my_shop/products/__pycache__/urls.cpython-313.pyc
+index 5e9eb04..569ef4c 100644
+Binary files a/my_shop/products/__pycache__/urls.cpython-313.pyc and b/my_shop/products/__pycache__/urls.cpython-313.pyc differ
+diff --git a/my_shop/products/__pycache__/views.cpython-313.pyc b/my_shop/products/__pycache__/views.cpython-313.pyc
+index 86d3955..bdfdfdf 100644
+Binary files a/my_shop/products/__pycache__/views.cpython-313.pyc and b/my_shop/products/__pycache__/views.cpython-313.pyc differ
+diff --git a/my_shop/products/templates/products/home.html b/my_shop/products/templates/products/home.html
+index 7976805..5c7a2ed 100644
+--- a/my_shop/products/templates/products/home.html
++++ b/my_shop/products/templates/products/home.html
+@@ -1,4 +1,18 @@
+-<!DOCTYPE html>
++{% extends "products/layout.html" %}
++
++{% block title %}BEMOLKA - Магазин одежды для самых маленьких!{% endblock %}
++
++{% block content%}
++    <h1>BEMOLKA - Магазин одежды для самых маленьких!</h1> 
++    <h2>В Вашем доме скоро ожидается пополнение?</h2> 
++    <h2>Или Вы уже стали мамой очаровательного карапуза? В любом случае Вам, конечно, хочется одеть кроху только в самые качественные и стильные наряды. Детский интернет-магазин BEMOLKA – отличное место для мам, которые хотят с рождения приучать своих малышей к стильному и красивому гардеробу.</h2>
++    <h2>В каталоге нашего интернет-магазина для детей Вы найдете все, что понадобится маленькому ребенку в любое время года: носочки, боди, шапочки для новорожденных, платья, штаники, теплые комбинезоны, комплекты для новорожденных и многое другое.</h2>
++    <h2>Наши товары:</h2>
++
++{% endblock %}
++
++
++<!-- <!DOCTYPE html>
+ <html lang="ru">
+ <head>
+     <meta charset="UTF-8">
+@@ -14,4 +28,4 @@
+     
+    
+ </body>
+-</html>
+\ No newline at end of file
++</html> -->
+\ No newline at end of file
+diff --git a/my_shop/products/urls.py b/my_shop/products/urls.py
+index 0d4ddcf..6325877 100644
+--- a/my_shop/products/urls.py
++++ b/my_shop/products/urls.py
+@@ -3,4 +3,6 @@ from . import views
+ 
+ urlpatterns = [
+     path('', views.home, name='home'),
++    path('products', views.products, name='products'),
++    path('about', views.about)
+ ]
+\ No newline at end of file
+diff --git a/my_shop/products/views.py b/my_shop/products/views.py
+index ad6e363..a29a855 100644
+--- a/my_shop/products/views.py
++++ b/my_shop/products/views.py
+@@ -2,5 +2,12 @@ from django.shortcuts import render
+ from .models import Product
+ 
+ def home(request):
+-    products = Product.objects.all()  # Получаем все товары из базы данных
+-    return render(request, 'products/home.html', {'products': products})
+\ No newline at end of file
++    return render(request, 'products/home.html')
++
++
++def products(request): # Получаем все товары из базы данных
++    products = Product.objects.all() 
++    return render(request, 'products/goods.html', {'products': products})
++
++def about(request): #стр о нас
++    return render(request, 'products/about.html')
+\ No newline at end of file
+diff --git a/req.txt b/req.txt
+index f592eac..2bedb85 100644
+--- a/req.txt
++++ b/req.txt
+@@ -1,5 +1,9 @@
+ asgiref==3.8.1
+-Django==5.1.5
++beautifulsoup4==4.13.3
++Django==4.2.19
++django-bootstrap-v5==1.0.11
+ pillow==11.1.0
++soupsieve==2.6
+ sqlparse==0.5.3
++typing_extensions==4.12.2
+ tzdata==2025.1

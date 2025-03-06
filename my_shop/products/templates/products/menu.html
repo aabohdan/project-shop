@@ -1,25 +1,39 @@
-<div class="menu">
-    <style>
-        .btn-click-animation:active {
-            transform: scale(0.95);
-        }
-        .btn-hover-animation {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .btn-hover-animation:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-    </style>
-    <span class="logo">BEMOLKA</span>
-    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Главная страница</button>
-    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Каталог</button>
-    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Контакты</button>
-    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Корзина</button>
-{% if is_auth %}
-    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Профиль</button>
-{% else %}
-    <button type="button" class="btn btn-primary btn-click-animation btn btn-primary btn-hover-animation">Выйти</button>
-{% endif %}
-
-</div>
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<header>
+    <div class="container">
+        <div class="top-links">
+            {% if user.is_authenticated %}
+                <a href="#" class="icon-link" title="ПРОФИЛЬ">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="{% url 'logout' %}" class="icon-link" title="ВЫЙТИ">
+                    <i class="fas fa-sign-out-alt"></i>
+                </a>
+            {% else %}
+                <a href="{% url 'login' %}" class="icon-link" title="ВОЙТИ">
+                    <i class="fas fa-user"></i>
+                </a>
+            {% endif %}
+            <a href="#" class="icon-link" title="КОРЗИНА">
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+        </div>
+    </div>
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Логотип">
+        </div>
+        <nav class="menu">
+            <ul>
+                <li><a href="#" class="centered-button">ГЛАВНАЯ</a></li>
+                <li><a href="#" class="centered-button">МАЛЫШИ (0-18 мес)</a></li>
+                <li><a href="#" class="centered-button">ДЕВОЧКИ</a></li>
+                <li><a href="#" class="centered-button">МАЛЬЧИКИ</a></li>
+                <li><a href="#" class="centered-button">ОБУВЬ</a></li>
+                <li><a href="#" class="centered-button">ТЕКСТИЛЬ | АКСЕССУАРЫ</a></li>
+                <li><a href="#" class="centered-button">ДОСТАВКА И ОПЛАТА</a></li>
+            </ul>
+        </nav>
+    </div>    
+</header>

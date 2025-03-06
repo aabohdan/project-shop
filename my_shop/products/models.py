@@ -11,7 +11,7 @@ class Category(models.Model):
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
-        
+
 class Size(models.Model):
     name = models.CharField(max_length=10, verbose_name="Размер")
     description = models.CharField(max_length=50, verbose_name="Описание размера", null=True, blank=True)
@@ -22,7 +22,7 @@ class Size(models.Model):
     class Meta:
         verbose_name = "Размер"
         verbose_name_plural = "Размеры"
-        
+
 class Color(models.Model):
     name = models.CharField(max_length=50, verbose_name="Название цвета")
     hex_code = models.CharField(max_length=7, verbose_name="HEX-код цвета", null=True, blank=True)
@@ -33,13 +33,12 @@ class Color(models.Model):
     class Meta:
         verbose_name = "Цвет"
         verbose_name_plural = "Цвета"
-        
+
 class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name="Название товара")
     description = models.TextField(verbose_name="Описание товара")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
-    image = models.ImageField(upload_to='products/', verbose_name="Изображение товара", null=True, blank=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="Категория", related_name='products', null=True)
+    categories = models.ManyToManyField(Category, verbose_name="Категории", related_name='products')  # ManyToManyField для категорий
     sizes = models.ManyToManyField(Size, verbose_name="Размеры", related_name='products')
     colors = models.ManyToManyField(Color, verbose_name="Цвета", related_name='products')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
@@ -51,6 +50,17 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
+
+class ProductImage(models.Model):
+    image = models.ImageField(upload_to='products/', verbose_name="Изображение товара")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images', verbose_name="Товар")
+
+    def __str__(self):
+        return f"Изображение для {self.product.name}"
+
+    class Meta:
+        verbose_name = "Изображение товара"
+        verbose_name_plural = "Изображения товаров"
 
 class Review(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Товар", related_name='reviews')

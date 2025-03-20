@@ -1,0 +1,58 @@
+{% extends "products/layout.html" %}
+{% block content %}
+  <h2>РЕГИСТРАЦИЯ</h2>
+  <form method="post">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+      <label for="id_username" class="form-label">Имя пользователя:</label>
+      <input type="text" name="username" class="form-control" id="id_username" placeholder="Введите уникальное имя пользователя.">
+    </div>
+
+    <div class="mb-3">
+      <label for="id_email" class="form-label">Электронная почта:</label>
+      <input type="email" name="email" class="form-control" id="id_email" placeholder="Введите ваш адрес электронной почты.">
+    </div>
+
+    <div class="mb-3">
+      <label for="id_first_name" class="form-label">Имя:</label>
+      <input type="text" name="first_name" class="form-control" id="id_first_name" placeholder="Введите ваше имя.">
+    </div>
+
+    <div class="mb-3">
+      <label for="id_last_name" class="form-label">Фамилия:</label>
+      <input type="text" name="last_name" class="form-control" id="id_last_name" placeholder="Введите вашу фамилию.">
+    </div>
+
+
+    <div class="mb-3">
+      <label for="id_password1" class="form-label">Пароль:</label>
+      <input type="password" name="password1" class="form-control" id="id_password1" placeholder="Введите пароль.">
+    </div>
+
+    <div class="mb-3">
+      <label for="id_password2" class="form-label">Подтверждение пароля:</label>
+      <input type="password" name="password2" class="form-control" id="id_password2" placeholder="Введите пароль еще раз для подтверждения.">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+  </form>
+
+  <script>
+    document.querySelectorAll('input').forEach(input => {
+      input.addEventListener('focus', function() {
+        this.removeAttribute('placeholder');
+      });
+
+      input.addEventListener('blur', function() {
+        if (this.value === '') {
+          this.setAttribute('placeholder', this.dataset.placeholder);
+        }
+      });
+
+      input.dataset.placeholder = input.getAttribute('placeholder');
+    });
+  </script>
+
+<p>Уже есть аккаунт? <a href="{% url 'login' %}" class="btn btn-secondary">Войти</a></p>
+{% endblock %}

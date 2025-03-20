@@ -1,0 +1,10 @@
+{% extends "products/layout.html" %}
+{% block content %}
+  <h2>Добавить изображения для {{ product.name }}</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Добавить изображение</button>
+  </form>
+  <a href="{% url 'home' %}" class="btn btn-secondary">Завершить</a>
+{% endblock %}

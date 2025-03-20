@@ -16,8 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from products import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('', include('products.urls')),]
+    path('accounts/register/', views.register, name='register'),
+    path('', include('products.urls')),
+    path('add-product/', views.add_product, name='add_product'),
+    path('add-product-image/<int:product_id>/', views.add_product_image, name='add_product_image')
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

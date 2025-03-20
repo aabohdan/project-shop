@@ -4,7 +4,19 @@
   <h2>ВХОД</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    
+    <div>
+      <label for="id_username">Логин:</label>
+      {{ form.username }}
+    </div>
+
+    <div>
+      <label for="id_password">Пароль:</label>
+      {{ form.password }}
+    </div>
+
     <button type="submit">ВХОД</button>
   </form>
+
+  <p>Еще нет аккаунта? <a href="{% url 'register' %}" class="btn btn-secondary">Зарегистрироваться</a></p>
 {% endblock %}

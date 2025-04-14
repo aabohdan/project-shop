@@ -21,24 +21,26 @@
 <div class="popular-products">
     <div class="container">
         <h2 class="section-title">Популярные товары</h2>
-            <div class="popular-row">
-                {% for product in popular_products %}
+        <div class="popular-row">
+            {% for product in popular_products %}
+                <a href="{{ product.get_absolute_url }}" class="pop-card-link">
                     <div class="pop-card">
                         <div class="pop-card-img-container">
                             <img src="{{ product.image.url }}" alt="{{ product.name }}" class="pop-card-img">
                         </div>
                         <div class="pop-card-body">
                             <h3 class="pop-card-title">{{ product.name }}</h3>
-                            <div class="pop-card-price">{{ product.price }} бел.руб.</div>
+                            <div class="pop-card-price text-price">{{ product.price }} бел.руб.</div>
                             <button class="pop-card-btn">В корзину</button>
                         </div>
                     </div>
-                {% empty %}
-                    <div class="empty-message">
-                        <div class="alert alert-info">Популярные товары появятся скоро!</div>
-                    </div>
-                {% endfor %}
-            </div>
+                </a>
+            {% empty %}
+                <div class="empty-message">
+                    <div class="alert alert-info">Популярные товары появятся скоро!</div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 

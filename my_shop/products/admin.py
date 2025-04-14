@@ -20,7 +20,7 @@ class SizeAdmin(admin.ModelAdmin):
 class ColorAdmin(admin.ModelAdmin):
     list_display = ('name', 'hex_code')
 
-class ProductImageInline(admin.TabularInline):  # Или admin.StackedInline для другого отображения
+class ProductImageInline(admin.TabularInline):  
     model = ProductImage
     extra = 6
 @admin.register(Product)

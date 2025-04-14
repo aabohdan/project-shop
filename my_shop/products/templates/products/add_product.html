@@ -12,7 +12,6 @@
             <form method="post" enctype="multipart/form-data" id="product-form" class="needs-validation" novalidate>
                 {% csrf_token %}
                 
-                <!-- Основные поля -->
                 <div class="row g-3 mb-4">
                     <div class="col-md-6">
                         <div class="form-floating mb-3">
@@ -52,7 +51,6 @@
                     </div>
                 </div>
 
-                <!-- Характеристики -->
                 <div class="border-top pt-3 mb-4">
                     <h5 class="mb-3"><i class="fas fa-list-ul me-2"></i>Характеристики</h5>
                     <div class="row g-3">
@@ -67,7 +65,6 @@
                     </div>
                 </div>
 
-                <!-- Изображения -->
                 <div class="border-top pt-3 mb-4">
                     <h5 class="mb-3"><i class="fas fa-images me-2"></i>Изображения</h5>
                     <div class="card border-0 bg-light">
@@ -89,7 +86,6 @@
                     </div>
                 </div>
 
-                <!-- Кнопки -->
                 <div class="border-top pt-3 d-flex justify-content-between">
                     <button type="submit" class="btn btn-primary px-4 py-2">
                         <i class="fas fa-save me-2"></i>Сохранить товар
@@ -108,12 +104,10 @@
 
 <script>
 $(document).ready(function() {
-    // Добавляем классы Bootstrap к элементам формы
     $('input, select, textarea').addClass('form-control');
     $('input[type="checkbox"], input[type="radio"]').removeClass('form-control').addClass('form-check-input');
     $('label').addClass('form-label');
     
-    // Динамическая загрузка подкатегорий
     $("#id_main_category").change(function() {
         const url = "{% url 'load_subcategories' %}";
         const mainCategoryId = $(this).val();
@@ -130,7 +124,6 @@ $(document).ready(function() {
         });
     });
 
-    // Валидация формы
     $("#product-form").on('submit', function(e) {
         const form = this;
         if (!form.checkValidity()) {
@@ -158,7 +151,6 @@ $(document).ready(function() {
         return true;
     });
 
-    // Превью изображений
     $("input[type='file']").on('change', function() {
         const preview = $("#file-preview");
         preview.empty();

@@ -90,7 +90,7 @@ class Color(models.Model):
     class Meta:
         verbose_name = "Цвет"
         verbose_name_plural = "Цвета"
-        ordering = ['name']  # Сортировка по умолчанию по имени
+        ordering = ['name']  
         
     def __str__(self):
         return self.name
@@ -191,7 +191,7 @@ class ProductImage(models.Model):
             raise ValidationError("Изображение обязательно")
         
     def save(self, *args, **kwargs):
-        self.full_clean()  # Вызовет clean() перед сохранением
+        self.full_clean() 
         super().save(*args, **kwargs)
     
     class Meta:
@@ -270,7 +270,6 @@ def handle_user_save(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     else:
-        # Безопасное обновление профиля
         if hasattr(instance, 'profile'):
             instance.profile.save()
         else:

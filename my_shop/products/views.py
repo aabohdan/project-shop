@@ -329,7 +329,6 @@ def category_products(request, category_slug):
     if selected_colors:
         products = products.filter(colors__in=selected_colors)
     
-    # Получаем уникальные размеры и цвета для фильтров
     sizes = Size.objects.filter(products__in=products).annotate(
         product_count=Count('products')
     ).distinct()

@@ -1,6 +1,5 @@
 /* Обновленные стили */
 header {
-    /* box-shadow: 0 2px 10px rgba(0,0,0,0.1); */
     position: relative;
 }
 
@@ -188,6 +187,29 @@ header {
     max-width: 800px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.text-price {
+    color: #FE81BB; /* Розовый цвет */
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.product-card a,
+.product-card a:hover,
+.product-card a:focus {
+    text-decoration: none;
+}
+
+/* Конкретно для названий и цен */
+.product-title,
+.product-price {
+    text-decoration: none !important;
+}
+
+/* Цвет при наведении на карточку */
+.pop-card-link:hover .text-price {
+    color: #FE81BB; /* Темнее при наведении */
 }
 
 .welcome-content {
@@ -408,7 +430,7 @@ header {
     transition: all 0.3s;
 }
 .product-card .btn-outline-primary:hover {
-    background-color: #0d6efd;
+    background-color: #FE81BB;
    color: white;
 }
    
@@ -417,7 +439,7 @@ header {
    display: flex;
    align-items: center;
    justify-content: center;
-   background-color: #f8f9fa;
+   background-color: #FE81BB;
    overflow: hidden;
 }
 
@@ -435,12 +457,12 @@ header {
 }
 
 .price {
-   color: #d32f2f;
+   color: #FE81BB;
    font-size: 1.1rem;
 }
 
 .add-to-basket-form {
-   border: 2px solid red !important;  /* Для визуального выделения */
+   border: 2px solid #FE81BB !important;  /* Для визуального выделения */
 }
 
 .form-floating > label {

@@ -1,7 +1,6 @@
 {% load static %}
 
 <div class="sidebar-filter">
-    <!-- Фильтр по подкатегориям -->
     <div class="filter-section">
         <h4 class="filter-title">Подкатегория</h4>
         <div class="filter-options">
@@ -18,7 +17,6 @@
         </div>
     </div>
 
-    <!-- Фильтр по росту -->
     <div class="filter-section">
         <h4 class="filter-title">Рост</h4>
         <div class="filter-options">
@@ -62,10 +60,8 @@
             const name = $(this).attr('name');
             const value = $(this).val();
     
-            // Удаляем все параметры с этим именем
             params.delete(name);
             
-            // Дальнейший код обработки...
         });
     });
     </script>

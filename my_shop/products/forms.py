@@ -76,7 +76,6 @@ class ProductForm(forms.ModelForm):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         
-        # Динамическая загрузка подкатегорий
         self.fields['subcategory'].queryset = SubCategory.objects.none()
         
         if 'main_category' in self.data:

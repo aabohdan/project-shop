@@ -6,7 +6,6 @@
     <p class="category-description">{{ main_category.description }}</p>
     
     <div class="category-controls">
-        <!-- Фильтр по подкатегориям -->
         <div class="subcategory-filter">
             <h3>Категории:</h3>
             <div class="subcategories">
@@ -23,7 +22,6 @@
             </div>
         </div>
         
-        <!-- Сортировка -->
         <div class="sorting">
             <h3>Сортировка:</h3>
             <select onchange="location = this.value;">
@@ -47,7 +45,6 @@
         </div>
     </div>
     
-    <!-- Список товаров -->
     <div class="products-grid">
         {% for product in products %}
             {% include 'products/_product_card.html' with product=product %}

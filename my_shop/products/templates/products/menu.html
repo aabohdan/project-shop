@@ -1,42 +1,48 @@
+<!-- Обновленный menu.html -->
 {% load static %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <header>
-    <div class="header-content">
+    <div class="header-top">
+        <div class="right-group">
+            <div class="search-container">
+                <form action="{% url 'search' %}" method="get" class="search-form">
+                    <input type="text" name="q" placeholder="Поиск..." value="{{ request.GET.q }}">
+                    <button type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+            
+            <div class="user-controls">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="icon-link"><i class="fas fa-user"></i></a>
+                    <a href="{% url 'logout' %}" class="icon-link"><i class="fas fa-sign-out-alt"></i></a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="icon-link"><i class="fas fa-user"></i></a>
+                {% endif %}
+                <a href="{% url 'basket' %}" class="icon-link"><i class="fas fa-shopping-cart"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-main">
         <div class="logo">
             <img src="{% static 'img/logo.png' %}" alt="Логотип">
         </div>
-        <nav class="menu">
+        
+        <nav class="main-menu">
             <ul>
-                <li><a href="{% url 'home' %}" class="centered-button">ГЛАВНАЯ</a></li>
-                <li><a href="{% url 'baby' %}" class="centered-button">МАЛЫШИ (0-18 мес)</a></li>
-                <li><a href="{% url 'girls' %}" class="centered-button">ДЕВОЧКИ</a></li>
-                <li><a href="{% url 'boys' %}" class="centered-button">МАЛЬЧИКИ</a></li>
-                <li><a href="{% url 'shoes' %}" class="centered-button">ОБУВЬ</a></li>
-                <li><a href="{% url 'accessories' %}" class="centered-button">ТЕКСТИЛЬ | АКСЕССУАРЫ</a></li>
-                <li><a href="{% url 'delpay' %}" class="centered-button">ДОСТАВКА И ОПЛАТА</a></li>
+                <li><a href="{% url 'home' %}" class="menu-link">ГЛАВНАЯ</a></li>
+                <li><a href="{% url 'baby' %}" class="menu-link">МАЛЫШИ (0-18 МЕС)</a></li>
+                <li><a href="{% url 'girls' %}" class="menu-link">ДЕВОЧКИ</a></li>
+                <li><a href="{% url 'boys' %}" class="menu-link">МАЛЬЧИКИ</a></li>
+                <li><a href="{% url 'shoes' %}" class="menu-link">ОБУВЬ</a></li>
+                <li><a href="{% url 'accessories' %}" class="menu-link">ТЕКСТИЛЬ | АКСЕССУАРЫ</a></li>
+                <li><a href="{% url 'delpay' %}" class="menu-link">ДОСТАВКА И ОПЛАТА</a></li>
             </ul>
         </nav>
     </div>
-    <div class="top-links">
-        {% if user.is_authenticated %}
-            <a href="#" class="icon-link" title="ПРОФИЛЬ">
-                <i class="fas fa-user"></i>
-            </a>
-            <a href="{% url 'logout' %}" class="icon-link" title="ВЫЙТИ">
-                <i class="fas fa-sign-out-alt"></i>
-            </a>
-        {% else %}
-            <a href="{% url 'login' %}" class="icon-link" title="ВОЙТИ">
-                <i class="fas fa-user"></i>
-            </a>
-        {% endif %}
-            <a href="{% url 'basket' %}" class="icon-link" title="КОРЗИНА">
-                <i class="fas fa-shopping-cart"></i>
-            </a>
+    
+    {% if user.is_authenticated and user.groups.all.0.name == 'Vendors' %}
+    <div class="vendor-section">
+        <a href="{% url 'add_product' %}" class="vendor-link"><i class="fas fa-plus-circle"></i> Добавить товар</a>
     </div>
-    <div class="vend">
-        {% if 'Vendors' in user.groups.all|join:", " %}
-            <a href="{% url 'add_product' %}" class="btn btn-success">Добавить товар</a>
-        {% endif %}
-    </div>
+    {% endif %}
 </header>

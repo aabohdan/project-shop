@@ -1,0 +1,60 @@
+{% extends "products/layout.html" %}
+
+{% block content %}
+<div class="main-category-container">
+    <h1>{{ main_category.get_name_display }}</h1>
+    <p class="category-description">{{ main_category.description }}</p>
+    
+    <div class="category-controls">
+        <!-- Фильтр по подкатегориям -->
+        <div class="subcategory-filter">
+            <h3>Категории:</h3>
+            <div class="subcategories">
+                <a href="?sort={{ sort_method }}" 
+                   class="subcategory {% if not selected_subcategory %}active{% endif %}">
+                   Все
+                </a>
+                {% for subcat in subcategories %}
+                <a href="{% url 'category' category_slug=main_category.slug %}?subcategory={{ subcat.slug }}&sort={{ sort_method }}" 
+                       class="subcategory {% if selected_subcategory == subcat.slug %}active{% endif %}">
+                       {{ subcat.name }} ({{ subcat.product_count }})
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Сортировка -->
+        <div class="sorting">
+            <h3>Сортировка:</h3>
+            <select onchange="location = this.value;">
+                <option value="?subcategory={{ selected_subcategory }}&sort=newest" 
+                        {% if sort_method == 'newest' %}selected{% endif %}>
+                    Новинки
+                </option>
+                <option value="?subcategory={{ selected_subcategory }}&sort=price_asc" 
+                        {% if sort_method == 'price_asc' %}selected{% endif %}>
+                    По возрастанию цены
+                </option>
+                <option value="?subcategory={{ selected_subcategory }}&sort=price_desc" 
+                        {% if sort_method == 'price_desc' %}selected{% endif %}>
+                    По убыванию цены
+                </option>
+                <option value="?subcategory={{ selected_subcategory }}&sort=popular" 
+                        {% if sort_method == 'popular' %}selected{% endif %}>
+                    Популярные
+                </option>
+            </select>
+        </div>
+    </div>
+    
+    <!-- Список товаров -->
+    <div class="products-grid">
+        {% for product in products %}
+            {% include 'products/_product_card.html' with product=product %}
+        {% empty %}
+            <p class="no-products">Товары не найдены</p>
+        {% endfor %}
+    </div>
+    
+</div>
+{% endblock %}

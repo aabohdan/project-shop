@@ -1,10 +1,55 @@
 {% extends "products/layout.html" %}
+{% load static %}
+
 {% block content %}
-  <h2>Добавить изображения для {{ product.name }}</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Добавить изображение</button>
-  </form>
-  <a href="{% url 'home' %}" class="btn btn-secondary">Завершить</a>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>Добавление изображений для {{ product.name }}</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Дополнительные изображения</label>
+                    <input type="file" name="images" multiple accept="image/*" class="form-control" required>
+                    <div class="form-text">Можно загрузить до 5 изображений за раз</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-plus-circle"></i> Добавить изображения
+                </button>
+                <a href="{% url 'product_detail' pk=product.pk %}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Вернуться к товару
+                </a>
+            </form>
+            
+            <hr>
+            
+            <h4 class="mt-4">Текущие изображения</h4>
+            <div class="row">
+                {% for image in product.additional_images.all %}
+                <div class="col-md-3 mb-3">
+                    <div class="card">
+                        <img src="{{ image.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        <div class="card-body text-center">
+                            <form action="{% url 'delete_product_image' image.pk %}" method="post" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i> Удалить
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12">
+                    <p class="text-muted">Нет дополнительных изображений</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

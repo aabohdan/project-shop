@@ -1,10 +1,91 @@
 {% extends "products/layout.html" %}
-
-{% block title %}BEMOLKA - Магазин одежды для самых маленьких!{% endblock %}
+{% load static %}
 
 {% block content %}
-    <h1>Добро пожаловать в магазин одежды для самых маленьких - BEMOLKA! </h1>
-    <p>Мы специализируемся на предоставлении высококачественной детской одежды для самых маленьких. Наша миссия — сделать вашего малыша самым стильным и счастливым!</p>
-    <p>В каталоге нашего интернет-магазина для детей Вы найдете все, что понадобится маленькому ребенку в любое время года: носочки, боди, шапочки для новорожденных, платья, штаники, теплые комбинезоны, комплекты для новорожденных и многое другое.</p>
-    <h2>Популярные товары:</h2>
+<div class="container mt-4">
+    <h2>Ваша корзина</h2>
+    
+    {% if basket_items %}
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Итого</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in basket_items %}
+                <tr>
+                    <td>
+                        <a href="{{ item.product.get_absolute_url }}">
+                            {% if item.product.image %}
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="50" class="me-2">
+                            {% endif %}
+                            {{ item.product.name }}
+                        </a>
+                    </td>
+                    <td>{{ item.product.price }} бел.руб.</td>
+                    <td>
+                        <form action="{% url 'update_basket' item.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <div class="input-group input-group-sm" style="width: 120px;">
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" 
+                                       class="form-control" onchange="this.form.submit()">
+                                <button type="submit" class="btn btn-outline-secondary">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </td>
+                    <td>{{ item.total_price }} бел.руб.</td>
+                    <td>
+                        <form action="{% url 'remove_from_basket' item.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="table-active">
+                    <th colspan="3">Общая сумма:</th>
+                    <th colspan="2">{{ total }} бел.руб.</th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    
+    <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-chevron-left me-2"></i> Продолжить покупки
+        </a>
+        <a href="{% url 'checkout' %}" class="btn btn-primary">
+            Оформить заказ <i class="fas fa-chevron-right ms-2"></i>
+        </a>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i> Ваша корзина пуста
+    </div>
+    <a href="{% url 'home' %}" class="btn btn-outline-primary">
+        <i class="fas fa-chevron-left me-2"></i> Вернуться к покупкам
+    </a>
+    {% endif %}
+</div>
+
+<script>
+// Автоматическая отправка формы при изменении количества
+document.querySelectorAll('input[name="quantity"]').forEach(input => {
+    input.addEventListener('change', function() {
+        this.form.submit();
+    });
+});
+</script>
 {% endblock %}

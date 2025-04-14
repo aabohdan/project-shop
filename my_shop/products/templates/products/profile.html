@@ -1,0 +1,72 @@
+{% extends "products/layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Мой профиль</h2>
+        <a href="{% url 'profile_edit' %}" class="btn btn-primary">Редактировать профиль</a>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h4>Основная информация</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <p><strong>Логин:</strong> {{ user.username }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p><strong>Email:</strong> {{ user.email }}</p>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <p><strong>Имя:</strong> {{ user.first_name }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h4>Дополнительная информация</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <p><strong>Телефон:</strong> {{ user.profile.phone|default:"Не указан" }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <p><strong>Дата рождения:</strong> 
+                        {% if user.profile.birth_date %}
+                            {{ user.profile.birth_date|date:"d.m.Y" }}
+                        {% else %}
+                            Не указана
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <p><strong>Адрес:</strong> {{ user.profile.address|default:"Не указан" }}</p>
+            </div>
+            
+            <div class="mb-3">
+                <p><strong>Аватар:</strong></p>
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}" 
+                         alt="Аватар пользователя" 
+                         class="img-thumbnail" 
+                         width="150">
+                {% else %}
+                    <p>Аватар не загружен</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

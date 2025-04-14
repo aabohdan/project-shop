@@ -1,0 +1,71 @@
+{% load static %}
+
+<div class="sidebar-filter">
+    <!-- Фильтр по подкатегориям -->
+    <div class="filter-section">
+        <h4 class="filter-title">Подкатегория</h4>
+        <div class="filter-options">
+            {% for subcat in subcategories %}
+            <div class="filter-option">
+                <input type="checkbox" 
+                       id="subcat-{{ subcat.pk }}" 
+                       name="subcategory" 
+                       value="{{ subcat.pk }}"
+                       {% if subcat.pk|stringformat:"s" in selected_subcategories %}checked{% endif %}>
+                <label for="subcat-{{ subcat.pk }}">{{ subcat.name }} ({{ subcat.product_count }})</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Фильтр по росту -->
+    <div class="filter-section">
+        <h4 class="filter-title">Рост</h4>
+        <div class="filter-options">
+            {% for size in sizes %}
+            <div class="filter-option">
+                <input type="checkbox" 
+                       id="size-{{ size.pk }}" 
+                       name="size" 
+                       value="{{ size.pk }}"
+                       {% if size.pk|stringformat:"s" in selected_sizes %}checked{% endif %}>
+                <label for="size-{{ size.pk }}">{{ size.name }} ({{ size.product_count }})</label>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Фильтр по цвету -->
+    <!-- <div class="filter-section">
+        <h4 class="filter-title">Цвет</h4>
+        <div class="filter-options">
+            {% for color in colors %}
+            <div class="filter-option color-option">
+                <input type="checkbox" 
+                       id="color-{{ color.pk }}" 
+                       name="color" 
+                       value="{{ color.pk }}"
+                       {% if color.pk|stringformat:"s" in selected_colors %}checked{% endif %}>
+                <label for="color-{{ color.pk }}" 
+                       style="background-color: {{ color.hex_code|default:'#cccccc' }};"></label>
+                <span>{{ color.name }} ({{ color.product_count }})</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div> -->
+    
+    <script>
+    $(document).ready(function() {
+        // Обработка изменений фильтров
+        $('.filter-options input[type="checkbox"]').change(function() {
+            const params = new URLSearchParams(window.location.search);
+            const name = $(this).attr('name');
+            const value = $(this).val();
+    
+            // Удаляем все параметры с этим именем
+            params.delete(name);
+            
+            // Дальнейший код обработки...
+        });
+    });
+    </script>

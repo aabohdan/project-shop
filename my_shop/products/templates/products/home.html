@@ -1,10 +1,45 @@
 {% extends "products/layout.html" %}
+{% load static %}
 
 {% block title %}BEMOLKA - Магазин одежды для самых маленьких!{% endblock %}
 
 {% block content %}
-    <h1>Добро пожаловать в магазин одежды для самых маленьких - BEMOLKA! </h1>
-    <p>Мы специализируемся на предоставлении высококачественной детской одежды для самых маленьких. Наша миссия — сделать вашего малыша самым стильным и счастливым!</p>
-    <p>В каталоге нашего интернет-магазина для детей Вы найдете все, что понадобится маленькому ребенку в любое время года: носочки, боди, шапочки для новорожденных, платья, штаники, теплые комбинезоны, комплекты для новорожденных и многое другое.</p>
-    <h2>Популярные товары:</h2>
+<div class="welcome-section">
+    <div class="container">
+        <h1 class="welcome-title">Добро пожаловать в магазин одежды для самых маленьких — <span class="brand-name">BEMOLKA</span>!</h1>
+        
+        <div class="welcome-content">
+            <p>Мы специализируемся на предоставлении высококачественной детской одежды для самых маленьких.</p> 
+            <p>Наша миссия — сделать вашего малыша самым стильным и счастливым!</p>
+            
+            <p>В каталоге нашего интернет-магазина для детей вы найдёте всё, что понадобится маленькому ребёнку в любое время года: носочки, боди, шапочки для новорожденных, платья, штаники, теплые комбинезоны, комплекты для новорожденных и многое другое.</p>
+            
+        </div>
+    </div>
+</div>
+
+<div class="popular-products">
+    <div class="container">
+        <h2 class="section-title">Популярные товары</h2>
+            <div class="popular-row">
+                {% for product in popular_products %}
+                    <div class="pop-card">
+                        <div class="pop-card-img-container">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="pop-card-img">
+                        </div>
+                        <div class="pop-card-body">
+                            <h3 class="pop-card-title">{{ product.name }}</h3>
+                            <div class="pop-card-price">{{ product.price }} бел.руб.</div>
+                            <button class="pop-card-btn">В корзину</button>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="empty-message">
+                        <div class="alert alert-info">Популярные товары появятся скоро!</div>
+                    </div>
+                {% endfor %}
+            </div>
+    </div>
+</div>
+
 {% endblock %}

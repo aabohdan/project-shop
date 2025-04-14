@@ -1,9 +1,15 @@
 from django.contrib import admin
-from .models import Category, ProductImage, Size, Color, Product, Review
+from .models import MainCategory, SubCategory, Size, Color, Product, ProductImage
 
-@admin.register(Category)
-class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'slug')
+@admin.register(MainCategory)
+class MainCategoryAdmin(admin.ModelAdmin):
+    list_display = ('get_name_display', 'slug', 'description')
+    prepopulated_fields = {'slug': ('name',)}
+
+@admin.register(SubCategory)
+class SubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug', 'main_category')
+    list_filter = ('main_category',)
     prepopulated_fields = {'slug': ('name',)}
 
 @admin.register(Size)
@@ -14,19 +20,15 @@ class SizeAdmin(admin.ModelAdmin):
 class ColorAdmin(admin.ModelAdmin):
     list_display = ('name', 'hex_code')
 
+class ProductImageInline(admin.TabularInline):  # Или admin.StackedInline для другого отображения
+    model = ProductImage
+    extra = 6
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'display_categories')  # Отображаем название, цену и категории
-    list_filter = ('categories',)  # Фильтруем по категориям
+    list_display = ('name', 'price', 'main_category', 'subcategory', 'is_featured', 'vendor')
+    list_filter = ('main_category', 'subcategory', 'is_featured')
+    filter_horizontal = ('sizes', 'colors')
+    readonly_fields = ['get_absolute_url'] 
+    inlines = [ProductImageInline]
 
-    def display_categories(self, obj):
-        return ", ".join([category.name for category in obj.categories.all()])
-    display_categories.short_description = 'Категории'
 
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
-    list_display = ('author_name', 'product', 'rating', 'created_at')
-    list_filter = ('rating', 'product')
-    search_fields = ('author_name', 'product__name')
-
-admin.site.register(ProductImage)

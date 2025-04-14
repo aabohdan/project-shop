@@ -1,10 +1,193 @@
 {% extends "products/layout.html" %}
 
+{% load static %}
+
 {% block content %}
-  <h2>Добавить товар</h2>
-  <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Добавить товар</button>
-  </form>
+<div class="container mt-4">
+    <div class="card border-0 shadow">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Добавление товара</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" id="product-form" class="needs-validation" novalidate>
+                {% csrf_token %}
+                
+                <!-- Основные поля -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ product_form.name }}
+                            <label for="{{ product_form.name.id_for_label }}">Название товара</label>
+                            <div class="invalid-feedback">Пожалуйста, укажите название</div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            {{ product_form.description }}
+                            <label for="{{ product_form.description.id_for_label }}">Описание</label>
+                        </div>
+                    </div>
+                    
+                        <div class="form-floating mb-3">
+                            {{ product_form.description }}
+                            <label for="{{ product_form.description.id_for_label }}">Состав</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating mb-3">
+                            {{ product_form.price }}
+                            <label for="{{ product_form.price.id_for_label }}">Цена</label>
+                            <div class="invalid-feedback">Укажите корректную цену</div>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            {{ product_form.main_category }}
+                            <label for="{{ product_form.main_category.id_for_label }}">Категория</label>
+                        </div>
+                        
+                        <div class="form-floating">
+                            {{ product_form.subcategory }}
+                            <label for="{{ product_form.subcategory.id_for_label }}">Подкатегория</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Характеристики -->
+                <div class="border-top pt-3 mb-4">
+                    <h5 class="mb-3"><i class="fas fa-list-ul me-2"></i>Характеристики</h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Размеры</label>
+                            {{ product_form.sizes }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Цвета</label>
+                            {{ product_form.colors }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Изображения -->
+                <div class="border-top pt-3 mb-4">
+                    <h5 class="mb-3"><i class="fas fa-images me-2"></i>Изображения</h5>
+                    <div class="card border-0 bg-light">
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Основное изображение *</label>
+                                <input type="file" name="main_image" accept="image/*" class="form-control" required>
+                                <div class="form-text">Будет отображаться как основное фото товара</div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Дополнительные изображения</label>
+                                <input type="file" name="images" multiple accept="image/*" class="form-control">
+                                <div class="form-text">Можно загрузить до 4 фото (JPEG, PNG)</div>
+                            </div>
+                            
+                            <div id="file-preview" class="row g-2 mt-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Кнопки -->
+                <div class="border-top pt-3 d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary px-4 py-2">
+                        <i class="fas fa-save me-2"></i>Сохранить товар
+                    </button>
+                    <a href="{% url 'home' %}" class="btn btn-outline-secondary px-4 py-2">
+                        <i class="fas fa-times me-2"></i>Отмена
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Подключение jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    // Добавляем классы Bootstrap к элементам формы
+    $('input, select, textarea').addClass('form-control');
+    $('input[type="checkbox"], input[type="radio"]').removeClass('form-control').addClass('form-check-input');
+    $('label').addClass('form-label');
+    
+    // Динамическая загрузка подкатегорий
+    $("#id_main_category").change(function() {
+        const url = "{% url 'load_subcategories' %}";
+        const mainCategoryId = $(this).val();
+        
+        $.ajax({
+            url: url,
+            data: {'main_category_id': mainCategoryId},
+            success: function(data) {
+                $("#id_subcategory").html(data).trigger('change');
+            },
+            error: function(xhr) {
+                console.error("Ошибка загрузки подкатегорий:", xhr.statusText);
+            }
+        });
+    });
+
+    // Валидация формы
+    $("#product-form").on('submit', function(e) {
+        const form = this;
+        if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(form).addClass('was-validated');
+            return false;
+        }
+        
+        const mainImage = $("input[name='main_image']")[0].files;
+        const additionalImages = $("input[name='images']")[0].files;
+        
+        if (mainImage.length === 0) {
+            alert("Ошибка: необходимо загрузить основное изображение!");
+            e.preventDefault();
+            return false;
+        }
+        
+        if (additionalImages.length > 4) {
+            alert("Ошибка: можно загрузить не более 4 дополнительных изображений!");
+            e.preventDefault();
+            return false;
+        }
+        
+        return true;
+    });
+
+    // Превью изображений
+    $("input[type='file']").on('change', function() {
+        const preview = $("#file-preview");
+        preview.empty();
+        
+        const files = this.files;
+        if (files.length > 0) {
+            Array.from(files).forEach((file, index) => {
+                if (index >= 5) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const isMain = $(this).attr('name') === 'main_image';
+                    preview.append(`
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card h-100 ${isMain ? 'border-primary border-2' : ''}">
+                                <img src="${e.target.result}" class="card-img-top p-2" style="height: 120px; object-fit: contain;">
+                                <div class="card-footer bg-transparent py-2">
+                                    <small class="d-block text-truncate">${file.name}</small>
+                                    <small class="text-muted">${(file.size/1024).toFixed(1)} KB</small>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                };
+                reader.onload = reader.onload.bind(this);
+                reader.readAsDataURL(file);
+            });
+        }
+    });
+});
+</script>
 {% endblock %}

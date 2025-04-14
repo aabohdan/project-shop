@@ -1,0 +1,143 @@
+{% extends "products/layout.html" %}
+{% load static %}
+
+{% block title %}{{ category.get_name_display }}{% endblock %}
+
+{% block content %}
+<div class="category-container">
+    <h1>{{ category.get_name_display }}</h1>
+    
+    {% if category.description %}
+    <p class="category-description">{{ category.description }}</p>
+    {% endif %}
+
+    <!-- Добавленный фильтр подкатегорий -->
+    <div class="product-filters">
+        <div class="subcategory-filter">
+            <h3>Подкатегории</h3>
+            <select class="form-select" id="subcategory-filter">
+                <option value="">Все подкатегории</option>
+                {% for subcat in subcategories %}
+                <option value="{{ subcat.slug }}" 
+                        {% if selected_subcategory == subcat.slug %}selected{% endif %}>
+                    {{ subcat.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Обернули продукты в контейнер для AJAX-обновления -->
+    <div class="products-container" id="products-container">
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'product_detail' pk=product.pk %}">
+                    {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                    {% endif %}
+                    <h3>{{ product.name }}</h3>
+                    <p class="price">{{ product.price }} бел.руб.</p>
+                </a>
+                {% if user.is_authenticated %}
+                <form action="{% url 'add_to_basket' product_id=product.pk %}" method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-cart-plus"></i> В корзину
+                    </button>
+                </form>
+                {% else %}
+                <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">
+                    <i class="bi bi-cart-plus"></i> В корзину
+                </a>
+                <small class="text-muted d-block mt-1">Требуется авторизация</small>
+                {% endif %}
+                
+                <script>
+                // Обработчик для AJAX добавления в корзину
+                document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const productId = this.dataset.productId;
+                        const url = this.dataset.url;
+                        
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRFToken': '{{ csrf_token }}'
+                            },
+                            body: new URLSearchParams({
+                                'quantity': 1
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Обновить счетчик корзины в шапке
+                                const basketCount = document.getElementById('basket-count');
+                                if (basketCount) basketCount.textContent = data.basket_count;
+                                
+                                // Показать уведомление
+                                showToast('Товар добавлен в корзину');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            showToast('Ошибка при добавлении в корзину', 'error');
+                        });
+                    });
+                });
+                
+                function showToast(message, type = 'success') {
+                    // Реализация toast-уведомления
+                }
+                </script>
+            </div>
+            {% empty %}
+            <p class="no-products">В этой категории пока нет товаров</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Добавленный JavaScript для AJAX-фильтрации -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const subcategoryFilter = document.getElementById('subcategory-filter');
+        
+        subcategoryFilter.addEventListener('change', function() {
+            const subcategorySlug = this.value;
+            const categorySlug = '{{ category.slug }}';
+            const url = subcategorySlug 
+                ? `/category/${categorySlug}/?subcategory=${subcategorySlug}`
+                : `/category/${categorySlug}/`;
+    
+            fetch(url, {
+                headers: { 
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.text();
+            })
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const newContent = doc.getElementById('products-container');
+                
+                if (newContent) {
+                    document.getElementById('products-container').innerHTML = newContent.innerHTML;
+                    history.pushState(null, null, url);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка при загрузке товаров');
+            });
+        });
+    });
+    </script>
+{% endblock %}

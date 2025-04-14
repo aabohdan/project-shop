@@ -1,0 +1,56 @@
+{% extends "products/layout.html" %}
+
+{% block title %}Результаты поиска{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Форма поиска -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <form action="{% url 'search' %}" method="get" class="search-form">
+                <div class="input-group">
+                    <input type="text" 
+                           name="q" 
+                           value="{{ query }}" 
+                           class="form-control form-control-lg" 
+                           placeholder="Поиск товаров..."
+                           required>
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if query %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="mb-4">
+                Результаты поиска: "{{ query }}"
+                <small class="text-muted">{{ results.count }} найдено</small>
+            </h3>
+        </div>
+    </div>
+
+    {% if results %}
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        {% for product in results %}
+            {% include "products/_product_card.html" with product=product %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                По вашему запросу "{{ query }}" ничего не найдено.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

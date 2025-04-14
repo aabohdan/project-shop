@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    'products',
+    'products'
 ]
 
 
@@ -52,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware'
 ]
 
 ROOT_URLCONF = 'my_shop.urls'
@@ -67,6 +68,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'my_shop.context_processors.basket_count'
             ],
         },
     },
@@ -144,4 +146,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'products/media_goods/')
 MEDIA_URL = '/media/'
+
+
+USE_L10N = False
+DATE_INPUT_FORMATS = ['%d.%m.%Y', '%Y-%m-%d']
+
 
